@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,8 +49,17 @@ public class AuthController {
         return "registration";
     }
     @PostMapping("/saveRegistration")
-    public String saveRegistration(@ModelAttribute("patient") PatientDto patientDto,Model model)
+    public String saveRegistration(@ModelAttribute("patient") PatientDto patientDto,BindingResult bindingResult,Model model)
     {
+        if(patientService.findByEmail(patientDto.getPatientEmail())!=null)
+        {
+            bindingResult.rejectValue("patientEmail","Email.exists","This email is already registered. Please use another email.");
+        }
+        if(bindingResult.hasErrors())
+        {
+            return "registration";
+        }
+
         patientDto.setPatientPassword(passwordEncoder.encode(patientDto.getPatientPassword()));
         patientService.savePatient(patientDto);
         return "redirect:/login";

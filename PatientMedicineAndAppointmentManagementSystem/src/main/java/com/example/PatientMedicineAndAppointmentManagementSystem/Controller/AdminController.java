@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,8 +37,16 @@ public class AdminController {
     }
 
     @PostMapping("/savethedoctordetasils")
-    public String savethedoctordetasils(@ModelAttribute("adddocotr") DoctorDto doctorDto ,Model model)
+    public String savethedoctordetasils(@ModelAttribute("adddocotr") DoctorDto doctorDto, BindingResult bindingResult, Model model)
     {
+        if(doctorService.findByEmail(doctorDto.getDoctorEmail())!=null)
+        {
+            bindingResult.rejectValue("doctorEmail","email.exists","This email is already used. Please use another email.");
+        }
+        if(bindingResult.hasErrors())
+        {
+            return "adddoctor";
+        }
         doctorDto.setDoctorPassword(passwordEncoder.encode(doctorDto.getDoctorPassword()));
         doctorService.saveDoctor(doctorDto);
         return "redirect:/admin/dashboard";

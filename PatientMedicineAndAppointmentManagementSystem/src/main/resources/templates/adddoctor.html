@@ -32,6 +32,7 @@
             <div class="mb-3">
                 <label for="email" class="form-label">Email ID</label>
                 <input th:field="*{doctorEmail}" type="email" class="form-control" id="email" placeholder="Enter your email id" required>
+            <p th:errors="*{doctorEmail}" th:if="${#fields.hasErrors('doctorEmail')}" class="text-danger"></p>
             </div>
             <div class="mb-3">
                 <label for="number" class="form-label">Phone Number</label>

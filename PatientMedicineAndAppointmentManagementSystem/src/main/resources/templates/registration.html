@@ -56,6 +56,8 @@
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email ID</label>
                                 <input th:field="*{patientEmail}" type="email" class="form-control" id="email" placeholder="Enter your email" required />
+                                <p th:errors="*{patientEmail}" class="text-danger"  th:if="${#fields.hasErrors('patientEmail')}"></p>
+
                             </div>
                             <!-- Password -->
                             <div class="mb-3 position-relative">
