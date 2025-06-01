@@ -10,6 +10,8 @@ import com.example.PatientMedicineAndAppointmentManagementSystem.Repository.Appo
 import com.example.PatientMedicineAndAppointmentManagementSystem.Repository.PatientRepository;
 import com.example.PatientMedicineAndAppointmentManagementSystem.Repository.DoctorRepository;
 import com.example.PatientMedicineAndAppointmentManagementSystem.Service.AppointmentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Tag(
+        name = "it make the data to sent to repository"
+)
 @Service
 @RequiredArgsConstructor
 public class AppointmentServiceImpl implements AppointmentService {
@@ -63,6 +68,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 //}
 
 
+    @Operation(
+            summary = "it take data and store in database"
+    )
     @Override
     public AppointmentDTO saveAppointment(AppointmentDTO appointmentDto) {
         Appointment appointment = modelMapper.map(appointmentDto, Appointment.class);
@@ -87,6 +95,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
 
+    @Operation(
+            summary = "it take Patient email id and get full appointment in that email id"
+    )
     @Override
     public List<AppointmentDTO> getAppointmentsByPatientEmail(String email) {
         Patient patient = patientRepository.findByPatientEmail(email);
@@ -101,17 +112,26 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .collect(Collectors.toList());
     }
 
+    @Operation(
+            summary = "it take DoctorEmail id and get full appointment in that email id"
+    )
     @Override
     public List<AppointmentDTO> getAppointmentsByDoctorEmail(String email) {
         Doctor doctor = doctorRepository.findByDoctorEmail(email);
-        if (doctor == null) return List.of();
-        return appointmentRepository.findByDoctor_DoctorId(doctor.getDoctorId()).stream()
-                .map(a -> {
-                    AppointmentDTO dto = modelMapper.map(a, AppointmentDTO.class);
-                    dto.setDoctorName(doctor.getDoctorName());
-                    if (a.getPatient() != null)
-                        dto.setPatientFirstName(a.getPatient().getPatientFirstName() + " " + a.getPatient().getPatientLastName());
-                    return dto;
+        if (doctor == null)
+        {
+            return List.of();
+        }
+        return appointmentRepository.findByDoctor_DoctorId(doctor.getDoctorId())
+                .stream().map(appointment -> {
+                    AppointmentDTO appointmentDTO = modelMapper.map(appointment, AppointmentDTO.class);
+                    appointmentDTO.setDoctorName(doctor.getDoctorName());
+                    if (appointment.getPatient() != null)
+                    {
+                        appointmentDTO.setPatientFirstName(appointment.getPatient().getPatientFirstName() + " " + appointment.getPatient().getPatientLastName());
+
+                    }
+                    return appointmentDTO;
                 })
                 .collect(Collectors.toList());
     }
@@ -133,12 +153,25 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public AppointmentDTO getapptiomentbyId(Long id) {
-        Optional<Appointment> appointment=appointmentRepository.findById(id);
-        return modelMapper.map(appointment,AppointmentDTO.class);
-    }
+//    @Override
+//    public AppointmentDTO getapptiomentbyId(Long id) {
+//        Optional<Appointment> appointment=appointmentRepository.findById(id);
+//        return modelMapper.map(appointment,AppointmentDTO.class);
+//    }
 
+    @Operation(
+            summary = "it take appointment id and get full details of thr appointment"
+    )
+        @Override
+        public AppointmentDTO getapptiomentbyId(Long id) {
+            Optional<Appointment> appointment = appointmentRepository.findById(id);
+            return appointment.map(a -> modelMapper.map(a, AppointmentDTO.class)).orElse(null);
+        }
+
+
+        @Operation(
+                summary = "it give all appointments"
+        )
     @Override
     public List<AppointmentDTO> getAllAppointments() {
         return appointmentRepository.findAll().stream()
@@ -146,6 +179,9 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .collect(Collectors.toList());
     }
 
+    @Operation(
+            summary = "it deleted the Appointment by using Appointment id"
+    )
     @Override
     public void deleteAppointment(Long id) {
         appointmentRepository.deleteById(id);

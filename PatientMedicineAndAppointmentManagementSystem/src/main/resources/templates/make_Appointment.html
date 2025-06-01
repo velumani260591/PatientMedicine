@@ -59,7 +59,8 @@ h2, h4 {
             <span class="fw-bold text-primary" th:text="${patient.patientFirstName}"></span>
             <span class="fw-bold text-primary" th:text="${patient.patientLastName}"></span>
         </p>
-        <a href="" id="History" class=" btn btn-info text-white">History</a>
+        <a th:href="@{/patient/dashboard}" class="btn btn-primary">   Back  </a>
+<!--        <a href="" id="History" class=" btn btn-info text-white">History</a>-->
     </div>
 
     <!-- Appointments Table -->

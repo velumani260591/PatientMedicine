@@ -61,7 +61,11 @@
                     </p>
                     <a th:href="@{/patient/make_appointment_page}" class="btn btn-primary">Make Appointment</a>
                 </div>
-<!--            <a href="History.html" id="History" class=" btn btn-info text-white">History</a>-->
+<!--            <a th:href="@{/patient/history/'+${patient.patientId}}" id="History" class=" btn btn-info text-white">History</a>-->
+            <!-- ... -->
+<!--            <a th:href="@{/patient/history}" id="History" class="btn btn-info text-white">History</a>-->
+            <!-- ... -->
+
         </div>
 
         <!-- Appointments Table -->

@@ -15,7 +15,7 @@ public class Doctor {
     private String specialization;
     private String doctorEmail;
     private String doctorPassword;
-    private String doctorContact;
+    private Long doctorContact;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<Appointment> appointments;

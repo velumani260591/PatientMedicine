@@ -4,6 +4,8 @@ import com.example.PatientMedicineAndAppointmentManagementSystem.Dto.PatientDto;
 import com.example.PatientMedicineAndAppointmentManagementSystem.Entity.Patient;
 import com.example.PatientMedicineAndAppointmentManagementSystem.Repository.PatientRepository;
 import com.example.PatientMedicineAndAppointmentManagementSystem.Service.PatientService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.Authenticator;
 
+@Tag(
+        name = "permission"
+
+)
 @Controller
 @AllArgsConstructor
 public class AuthController {
@@ -30,6 +36,10 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
     private ModelMapper modelMapper;
 
+
+    @Operation(
+            summary = "it open the login page"
+    )
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
@@ -41,6 +51,9 @@ public class AuthController {
 
 
 
+    @Operation(
+            summary = "in this it take the registration page full details"
+    )
     @GetMapping("/registration")
     public String Registration(Model model)
     {
@@ -48,6 +61,11 @@ public class AuthController {
         model.addAttribute("patient",patient);
         return "registration";
     }
+
+
+    @Operation(
+            summary = "it saved the registration detail in to patient database"
+    )
     @PostMapping("/saveRegistration")
     public String saveRegistration(@ModelAttribute("patient") PatientDto patientDto,BindingResult bindingResult,Model model)
     {

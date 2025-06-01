@@ -9,6 +9,8 @@ import com.example.PatientMedicineAndAppointmentManagementSystem.Service.Appoint
 import com.example.PatientMedicineAndAppointmentManagementSystem.Service.AppointmentServiceHistory;
 import com.example.PatientMedicineAndAppointmentManagementSystem.Service.DoctorService;
 import com.example.PatientMedicineAndAppointmentManagementSystem.Service.PatientService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+@Tag(
+        name = "Make all doctor opertions or controller in it"
+)
 
 @Controller
 @RequestMapping("/doctor")
@@ -29,32 +34,35 @@ public class DoctorController {
     private final PatientService patientService;
     private final ModelMapper modelMapper;
 
+    @Operation(
+            summary = "it open the dashboard of doctor with appointment "
+    )
     @GetMapping("/dashboard")
     public String dashboard(Model model, Authentication authentication) {
-        // Get logged-in doctor's email
+
         String email = authentication.getName();
 
-        // Get doctor details
+
         DoctorDto doctor = doctorService.findByEmail(email);
         model.addAttribute("doctor", doctor);
 
-        // Get all appointments for this doctor
+
         List<AppointmentDTO> appointments = appointmentService.getAppointmentsByDoctorEmail(email);
         model.addAttribute("allappointments", appointments);
 
-        // Gather unique patient IDs from appointments
+
         Set<Long> patientIds = appointments.stream()
                 .map(AppointmentDTO::getPatientId)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        // Convert Set to List for repository method
+
         List<Long> patientIdList = new ArrayList<>(patientIds);
 
-        // Fetch all patients in one query
+
         List<PatientDto> patients = patientService.findAllByIds(patientIdList);
 
-        // Create a map for quick lookup in the template
+
         Map<Long, PatientDto> patientMap = patients.stream()
                 .collect(Collectors.toMap(PatientDto::getPatientId, p -> p));
         model.addAttribute("patientMap", patientMap);
@@ -62,12 +70,22 @@ public class DoctorController {
         return "doctor_dashboard";
     }
 
+
+    @Operation(
+            summary = "it delete the appointment if docotrs select cancel"
+    )
+
     @GetMapping("/canceltheappoinment/{id}")
     public String canceltheappoinment(@PathVariable("id") Long id)
     {
         appointmentService.deleteAppointment(id);
         return "redirect:/doctor/dashboard";
     }
+
+
+    @Operation(
+            summary = "it accept the appointment for doctor so he can get treatment for doctor"
+    )
 
     @GetMapping("/accpetdPatient/{appointmentId}/{patientId}")
     public String acceptpatienr(@PathVariable("appointmentId") Long appointmentId,
@@ -84,6 +102,9 @@ public class DoctorController {
     }
 
 
+    @Operation(
+            summary = "after the treatment the doctor give some medical and after save it store the new medical records data in patient database"
+    )
     @PostMapping("/savethepatientmedicaldetils")
     public String savethepatientmedicaldetils(@ModelAttribute("appointmentpatient") PatientDto patientDto, Model model)
     {

@@ -16,7 +16,7 @@ public class Patient {
     private String patientLastName;
     private String patientEmail;
     private String patientPassword;
-    private String patientContact;
+    private Long patientContact;
     private String medicalHistory;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
