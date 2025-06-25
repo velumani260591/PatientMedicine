@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/PatientMedicineAndAppointmentManagementSystem/PatientMedicineAndAppointmentManagementSystem.iml" filepath="$PROJECT_DIR$/PatientMedicineAndAppointmentManagementSystem/PatientMedicineAndAppointmentManagementSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/PatientMedicineAndAppointmentManagementSystemApplication.iml" filepath="$PROJECT_DIR$/.idea/PatientMedicineAndAppointmentManagementSystemApplication.iml" />
+    </modules>
+  </component>
+</project>
